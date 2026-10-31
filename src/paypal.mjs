@@ -4,7 +4,7 @@ export class PayPalError extends Error {
   constructor(status, name, debugId, details) { super('PayPal: ' + name); this.status = status; this.code = name; this.debugId = debugId; this.details = details; this.uncertain = status >= 500; }
 }
 export class PayPal {
-  constructor(env, transport = fetch) { this.env = env; this.transport = transport; this.token = null; }
+  constructor(env, transport = fetch) { this.env = env; this.transport = (...args) => transport(...args); this.token = null; }
   async auth(force = false) {
     if (!force && this.token && this.token.expires > Date.now() + 60000) return this.token.value;
     insist(this.env.PAYPAL_CLIENT_ID && this.env.PAYPAL_CLIENT_SECRET, 'PAYPAL_NOT_CONFIGURED', 'Sandbox credentials are not configured.', 503);

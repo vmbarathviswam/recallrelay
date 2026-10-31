@@ -4,8 +4,8 @@ All planning dates below use Asia/Kolkata unless explicitly marked Pacific. The 
 
 | Date | Reserved work |
 |---|---|
-| October 31 | Prototype implementation, automated guardrails, source repository and hosted replay. |
-| November 1–2 | Configure sandbox and Gemini, complete real buyer capture/partial refund, run live image evaluation, record sanitized provider evidence. |
+| October 31 | Completed prototype, automated guardrails, public source/replay, full Worker/D1 deployment, real PayPal capture/partial refund, live Gemini evaluation and genuine signed webhooks. |
+| November 1–2 | Review recorded provider evidence, rehearse the six-scenario demo, record the video and prepare private judge access instructions. |
 | November 3 | Test from a clean clone and separate browser; review API collection, accessibility and deployment isolation. |
 | November 4 | Prepare first public YouTube video and Devpost submission; request early eligibility review ahead of November 5. |
 | November 5–8 | Reserved for organizer feedback, provider differences and observed defects. Add regression tests for any fix. |
@@ -16,9 +16,9 @@ All planning dates below use Asia/Kolkata unless explicitly marked Pacific. The 
 
 ## Availability plan
 
-The public GitHub Pages replay uses bundled browser assets and AG Grid Community. It does not depend on a 14/45-day sponsor trial, an external model quota, a developer laptop, or third-party CDN scripts. Synthetic state persists in each browser's IndexedDB. The complete Node application uses durable SQLite; a Worker/D1 adapter is also prepared. Sites public publishing was rejected by workspace policy, so the public replay uses Pages. The public repository provides an independent local run path with real provider adapters.
+The full application is deployed on Cloudflare Workers with durable D1 storage and server-only provider secrets. It works independently of the developer laptop. The separate GitHub Pages replay uses bundled browser assets and AG Grid Community, with synthetic state in each browser's IndexedDB. The replay does not depend on a sponsor trial, model quota or third-party CDN scripts. The public repository also provides an independent Node/SQLite run path with real provider adapters.
 
-Retain the GitHub account, Pages deployment and repository through judging. Do not delete the server's financial database or submission release. The checked-in GitHub Actions availability workflow requests the public `health.json` daily until the day after judging; inspect failed runs. This is a static availability check, not provider connectivity, self-healing or an uptime guarantee. Verify the actual browser flow after any platform change.
+Retain the Cloudflare account, Worker, D1 database, GitHub account, Pages deployment and repository through judging. Do not delete the financial database or submission release. The checked-in GitHub Actions availability workflow checks replay health, full-server configuration health and rejection of unauthenticated merchant access daily until the day after judging; inspect failed runs. Configuration health is not a live provider transaction, self-healing or an uptime guarantee. Verify the actual browser flow after any platform change.
 
 Keep real sandbox operations on a separate, authenticated configuration. Renew server access tokens automatically using returned expiry; do not distribute expiring access tokens to judges. Maintain merchant credentials, buyer test access and AI quota if the judged live build depends on them. Never place shared secret keys in the public README. Provide access instructions or a hosted authenticated judge workspace.
 
@@ -33,10 +33,10 @@ Keep real sandbox operations on a separate, authenticated configuration. Renew s
 
 ## Submission checklist
 
-- [ ] Real PayPal sandbox mixed purchase and $59 partial refund verified.
-- [ ] Real Gemini image and notice extraction observed; difficult cases and abstentions documented.
-- [ ] Sanitized sandbox evidence reviewed and attached/documented.
-- [ ] Public repository contains all source, generated schema, sample assets, lockfile and root MIT license.
+- [x] Real PayPal sandbox mixed purchase and $59 partial refund verified.
+- [x] Real Gemini image and notice extraction observed; difficult cases and abstentions documented.
+- [x] Sanitized sandbox evidence reviewed and documented, including hosted signed notifications.
+- [x] Public repository contains all source, generated schema, sample assets, lockfile and root MIT license.
 - [ ] Fresh-clone instructions and Postman collection verified.
 - [ ] Public YouTube video under three minutes added to Devpost.
 - [ ] Public/authorized hosted demo accessible to judges without our developer session.

@@ -4,7 +4,8 @@
 
 Built for the [PayPal AI Hackathon](https://paypalaihackathon.devpost.com/). Original implementation created during the hackathon, October 31, 2026. MIT licensed.
 
-- [Public interactive replay](https://vmbarathviswam.github.io/recallrelay/)
+- [Full application: PayPal sandbox + live Gemini](https://recallrelay-sandbox.recallrelay-vmbarathviswam.workers.dev/)
+- [Public browser replay: simulated responses](https://vmbarathviswam.github.io/recallrelay/)
 - [Public source](https://github.com/vmbarathviswam/recallrelay)
 - [Demo script: six scenarios in 2:45](docs/DEMO.md)
 - [Verification status and remaining submission work](docs/READINESS.md)
@@ -85,7 +86,7 @@ npm run verify:sandbox -- capture <purchase-id>
 npm run verify:sandbox -- evidence <claim-id>
 ```
 
-Evidence files go to ignored `outputs/sandbox-evidence/`. They contain provider identifiers and outcomes, not tokens. Inspect before publishing. This verifier refuses replay mode. A buyer-approved sandbox capture and merchant-approved partial refund were completed on October 31, 2026. See [redacted live verification](docs/evidence/live-verification.json). The public Pages build remains a replay; full-server hosting and signed webhook delivery are still pending.
+Evidence files go to ignored `outputs/sandbox-evidence/`. They contain provider identifiers and outcomes, not tokens. Inspect before publishing. This verifier refuses replay mode and reads provider status again before recording refund proof. Buyer-approved sandbox captures and merchant-approved partial refunds were completed on October 31, 2026, including an end-to-end purchase on the deployed Worker/D1 application. See [local verification](docs/evidence/live-verification.json) and [hosted verification](docs/evidence/hosted-verification.json). The hosted server also performed live Gemini label/notice extraction and processed genuine, signature-verified capture and refund webhooks. The public Pages build remains a separate replay.
 
 If the purchase serial differs from the first sample, Windows users can generate a matching, explicitly synthetic test label with `./scripts/create-samples.ps1 -Serial N65-2408-8001 -OutputDirectory outputs/sandbox-evidence`. Use the serial actually registered to that purchase. This creates a demo fixture, not evidence about a real physical product.
 
@@ -128,7 +129,9 @@ Import [the Postman collection](api/RecallRelay.postman_collection.json). Set `b
 
 ## Deployment and judging availability
 
-The full handler runs on Node/SQLite locally, and a Cloudflare Worker/D1 adapter is included. Browser assets are bundled into the Worker, with no CDN dependency or commercial grid trial. `drizzle/` contains the generated schema migration. `.openai/hosting.json` identifies the prepared Sites project and `DB` binding. Sites internet publishing is disabled for this workspace, so no public Worker deployment is claimed. Hosted runtime secrets must be configured in a compatible hosting platform; `.env` is local only.
+The full handler runs on Node/SQLite locally and on the deployed Cloudflare Worker/D1 server. Browser assets are bundled into the Worker, with no CDN dependency or commercial grid trial. `drizzle/` contains the generated schema migration. Sites internet publishing is disabled for this workspace, so the full server was deployed directly using Cloudflare's official Wrangler CLI. `.openai/hosting.json` remains the prepared Sites adapter's identity; the direct deployment uses an ignored `wrangler.local.jsonc`. Hosted credentials are Cloudflare runtime secrets; `.env` is local only. See [full-server deployment instructions](docs/CLOUDFLARE.md).
+
+The full application asks for the merchant admin token. The owner can obtain it from their private local `.env`; it stays in page memory and is cleared on reload. Provide judge access through the hackathon's private access-instructions field, never by committing that token or adding it to a public URL. The credential-free Pages replay remains available for immediate exploration.
 
 The public GitHub Pages demo runs the same handler and domain rules entirely in the browser, with an IndexedDB repository. It has no backend, no provider keys and no live financial API calls. Synthetic state persists in that browser; clearing site storage removes it. Its approval and audit controls demonstrate behavior, not an authority boundary against a person editing their own browser. Keep real sandbox merchant data on the full Node app or a separately configured server deployment, protected by the admin token or exact Sites `MERCHANT_USER_ID`. Platform identity headers are trusted only on Sites; the local server strips incoming `oai-*` headers. Never add provider secrets to a Pages build.
 

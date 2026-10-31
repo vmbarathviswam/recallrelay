@@ -17,3 +17,6 @@ jobs:
             exit 0
           fi
           curl --fail --retry 2 --max-time 30 https://vmbarathviswam.github.io/recallrelay/health.json
+          curl --fail --retry 2 --max-time 30 https://recallrelay-sandbox.recallrelay-vmbarathviswam.workers.dev/health | jq -e '.status == "ok" and .mode == "sandbox" and .database == "D1" and .paypalConfigured and .ai and .webhookConfigured'
+          code="$(curl --silent --show-error --output /dev/null --write-out '%{http_code}' --max-time 30 https://recallrelay-sandbox.recallrelay-vmbarathviswam.workers.dev/api/state)"
+          test "$code" = 401

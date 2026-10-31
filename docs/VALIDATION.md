@@ -4,7 +4,7 @@ Executed October 31, 2026 on Node 26.10, Windows. CI uses Node 24 on Linux.
 
 | Check | Result |
 |---|---|
-| Automated domain/API/service/persistence suite | 132 tests passed; no failures or skipped tests |
+| Automated domain/API/service/persistence suite | 133 tests passed; no failures or skipped tests |
 | Deterministic matching regression | 12/12 passed; explicitly not model accuracy |
 | Production browser/Worker bundle | Build passed; valid ESM exporting `default.fetch` |
 | Drizzle schema generator | Passed; no pending schema change |
@@ -18,9 +18,12 @@ Executed October 31, 2026 on Node 26.10, Windows. CI uses Node 24 on Linux.
 | External availability | The GitHub Actions `Judging demo availability` workflow passed against the public URL; daily checks are configured through judging |
 | Real PayPal proof verifier | Buyer-approved $77 sandbox capture, explicit merchant approval and $59 refund completed; verifier reconciled provider state before recording evidence |
 | Real Gemini evaluation | Three live synthetic-image checks passed with gemini-3.5-flash-lite; current case label and grounded notice extraction also verified |
+| Hosted full-server transaction | Worker/D1 created and captured a real $77 sandbox purchase; live label extraction and separate human verification/approval preceded a completed $59 refund; subsequent PayPal reconciliation retained the same refund |
+| Genuine signed notifications | Capture-completed and capture-refunded events passed PayPal signature verification and were processed from the durable D1 inbox |
+| Hosted negative checks | Unsigned notification and duplicate claim refused; case and financial-operation counts remained unchanged |
 
 The development dependency override updates the deprecated Drizzle loader's transitive esbuild to the same patched version used by the app. The database generator was exercised after that override. No esbuild development server is exposed.
 
 The automated suite includes negative PayPal responses, permanent provider eligibility holds, incomplete refund-history holds, 180-day boundaries, prior and partial refunds, stale evidence/campaign approvals, concurrent execution, SQLite persistence, unknown-response recovery through provider reads, external refund attribution, verified dispute holds, inbox retry, forged webhook rejection, origin checks and model schema failures. Provider transports in those tests are controlled doubles.
 
-Live-provider proof is now recorded in [the redacted result](evidence/live-verification.json) and [actual AI evaluation](evidence/live-ai-evaluation.json). The higher-capacity model returned temporary service errors, so the default was changed to the live-verified Flash-Lite model. Public full-server deployment, real signed webhook delivery and the recorded video remain outstanding. See [readiness](READINESS.md).
+Live-provider proof is recorded in [the local result](evidence/live-verification.json), [hosted verification](evidence/hosted-verification.json) and [actual AI evaluation](evidence/live-ai-evaluation.json). The higher-capacity model returned temporary service errors, so the default was changed to the live-verified Flash-Lite model. The deployed Worker required a native-fetch binding fix that is covered by a regression test. The recorded video and final Devpost submission remain outstanding. See [readiness](READINESS.md).

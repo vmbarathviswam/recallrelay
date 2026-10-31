@@ -9,10 +9,13 @@
     "GEMINI_MODEL": "gemini-3.5-flash-lite",
     "APP_ORIGIN": "REPLACE_WITH_YOUR_WORKER_HTTPS_ORIGIN"
   },
-  "d1_databases": [{
-    "binding": "DB",
-    "database_name": "recallrelay-sandbox",
-    "database_id": "REPLACE_WITH_CREATED_D1_DATABASE_ID",
-    "migrations_dir": "drizzle"
-  }]
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "recallrelay-sandbox",
+      "database_id": "REPLACE_WITH_CREATED_D1_DATABASE_ID",
+      "migrations_dir": "drizzle"
+    }
+  ],
+  "preview_urls": false
 }

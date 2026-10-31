@@ -1,0 +1,58 @@
+{
+  "checkedAt": "2026-10-31T05:52:33.491Z",
+  "origin": "https://recallrelay-sandbox.recallrelay-vmbarathviswam.workers.dev",
+  "runtime": "Cloudflare Worker with durable D1 storage",
+  "mode": "real PayPal sandbox and real Gemini API",
+  "syntheticProductAndRecall": true,
+  "purchase": {
+    "createdAndCapturedByHostedServer": true,
+    "currency": "USD",
+    "capturedCents": 7700,
+    "providerStatusAfterReconciliation": "PARTIALLY_REFUNDED"
+  },
+  "refund": {
+    "status": "COMPLETED",
+    "amountCents": 5900,
+    "unaffectedCableCents": 1800,
+    "merchantVerifiedEvidence": true,
+    "merchantApprovalRecorded": true,
+    "approvalConsumed": true,
+    "providerReconciliationPerformed": true
+  },
+  "ai": {
+    "mode": "Gemini · gemini-3.5-flash-lite",
+    "model": "N65",
+    "serial": "N65-2408-8002",
+    "ambiguous": false,
+    "hostedNoticeExtractionAlsoVerified": true
+  },
+  "genuinePayPalWebhooks": [
+    {
+      "type": "PAYMENT.CAPTURE.COMPLETED",
+      "signatureVerification": "passed",
+      "inboxStatus": "processed",
+      "reconciledAt": "2026-10-31T05:43:54.036Z"
+    },
+    {
+      "type": "PAYMENT.CAPTURE.REFUNDED",
+      "signatureVerification": "passed",
+      "inboxStatus": "processed",
+      "reconciledAt": "2026-10-31T05:48:51.608Z"
+    }
+  ],
+  "hostedGuardrails": {
+    "unsignedWebhookResult": "FORGED_WEBHOOK",
+    "duplicateClaimResult": "DUPLICATE_CLAIM",
+    "operationCountBeforeNegativeChecks": 2,
+    "operationCountAfterNegativeChecks": 2,
+    "caseCountBeforeNegativeChecks": 2,
+    "caseCountAfterNegativeChecks": 2,
+    "verifiedInboxCountBeforeNegativeChecks": 2,
+    "verifiedInboxCountAfterNegativeChecks": 2
+  },
+  "limits": [
+    "Lost-response recovery is demonstrated by labelled replay and controlled automated tests; no live network-fault injection is claimed.",
+    "Ambiguity and the 180-day boundary are demonstrated by replay/tests and live synthetic-image extraction, not by an old real sandbox capture.",
+    "Provider identifiers, image contents, merchant notes and credentials are omitted from this public report."
+  ]
+}

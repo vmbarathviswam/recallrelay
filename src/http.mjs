@@ -123,6 +123,7 @@ export function createHandler({ repository, assets = {}, transport = fetch, now 
         else throw new DomainError('NOT_FOUND','Route not found.',404);
       }
     } catch(e) {
+      if (!(e instanceof DomainError)) console.error(JSON.stringify({event:'request.error',name:e?.name,code:e?.code,providerStatus:e?.status,illegalInvocation:/Illegal invocation/i.test(e?.message||''),networkFailure:/fetch failed|Network connection|DNS|TLS/i.test(e?.message||'')}));
       response = json({ error: e.code || 'INTERNAL_ERROR', message: e instanceof DomainError ? e.message : e.code ? 'External service returned ' + e.code + '. No unapproved refund was issued.' : 'The operation could not be completed. Reconcile pending payments before retrying.', debugId: e.debugId || undefined }, e instanceof DomainError ? e.status : 503);
     }
     if (cookie) response.headers.append('Set-Cookie',cookie);
