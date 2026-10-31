@@ -1,0 +1,11 @@
+import { build } from 'esbuild';
+import { mkdir, readFile, writeFile, copyFile } from 'node:fs/promises';
+await mkdir('pages', { recursive: true });
+await build({ entryPoints: ['web/app.mjs'], outfile: 'pages/app.js', bundle: true, minify: true, format: 'esm', target: 'es2022', external: ['./browser-replay.js'], legalComments: 'eof' });
+await build({ entryPoints: ['src/browser-replay.mjs'], outfile: 'pages/browser-replay.js', bundle: true, minify: true, format: 'esm', target: 'es2022', platform: 'browser' });
+const html = (await readFile('web/index.html', 'utf8')).replace('<html lang="en">', '<html lang="en" data-runtime="browser">').replace('href="/style.css"', 'href="./style.css"').replace('src="/app.js"', 'src="./app.js"');
+await writeFile('pages/index.html', html);
+await copyFile('web/style.css', 'pages/style.css');
+await writeFile('pages/.nojekyll', '');
+await writeFile('pages/health.json', JSON.stringify({ status: 'ok', mode: 'browser-replay', builtAt: new Date().toISOString() }));
+console.log('Built public browser-only replay with IndexedDB; no provider credentials or network payment operations.');

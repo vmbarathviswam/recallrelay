@@ -34,6 +34,8 @@ There is no scheduled worker in this prototype. Merchant reconciliation drains t
 
 ## Deployment
 
+The public Pages build executes domain rules in the browser and stores only synthetic data in IndexedDB. Anyone can modify their own browser state; its approval/audit controls are illustrative, not a security boundary. No provider secrets or live payment calls exist in that build. Use the authenticated server application for live sandbox verification.
+
 The hosted public demo stays in replay with fictional data. Never switch that shared audience to real merchant operations without authenticated merchant authorization, isolation, retention controls and a separate credential configuration. Do not publish `.env`, database files, uploaded evidence, admin tokens, API keys, buyer passwords or raw account data. Keep credentials in the hosting secret manager and redeploy after changes.
 
 The operational journal is bounded and not cryptographically tamper-proof. Database administrators can modify records. No fraud-detection guarantee, certified product-safety assessment, legal advice, full tenant IAM, incident response service or production compliance claim is made.

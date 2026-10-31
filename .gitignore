@@ -1,4 +1,5 @@
 dist/
+pages/
 site.tar.gz
 node_modules/
 .env

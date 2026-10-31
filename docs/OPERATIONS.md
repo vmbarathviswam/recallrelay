@@ -16,15 +16,15 @@ All planning dates below use Asia/Kolkata unless explicitly marked Pacific. The 
 
 ## Availability plan
 
-The hosted replay uses bundled browser assets and AG Grid Community. It does not depend on a 14/45-day sponsor trial, an external model quota, a developer laptop, or third-party CDN scripts. D1 stores replay state durably. The public repository also provides an independent local run path.
+The public GitHub Pages replay uses bundled browser assets and AG Grid Community. It does not depend on a 14/45-day sponsor trial, an external model quota, a developer laptop, or third-party CDN scripts. Synthetic state persists in each browser's IndexedDB. The complete Node application uses durable SQLite; a Worker/D1 adapter is also prepared. Sites public publishing was rejected by workspace policy, so the public replay uses Pages. The public repository provides an independent local run path with real provider adapters.
 
-Retain the hosting account and deployment through judging. Do not delete the Site, database, repository or release. The checked-in GitHub Actions availability workflow requests `/health` daily until the day after judging; inspect failed runs. This is a health check, not a self-healing service or uptime guarantee. Verify the actual browser flow after any platform change.
+Retain the GitHub account, Pages deployment and repository through judging. Do not delete the server's financial database or submission release. The checked-in GitHub Actions availability workflow requests the public `health.json` daily until the day after judging; inspect failed runs. This is a static availability check, not provider connectivity, self-healing or an uptime guarantee. Verify the actual browser flow after any platform change.
 
 Keep real sandbox operations on a separate, authenticated configuration. Renew server access tokens automatically using returned expiry; do not distribute expiring access tokens to judges. Maintain merchant credentials, buyer test access and AI quota if the judged live build depends on them. Never place shared secret keys in the public README. Provide access instructions or a hosted authenticated judge workspace.
 
 ## Incident runbook
 
-1. Check `/health` and the browser mode banner. An HTTP 200 proves availability only, not payment-provider connectivity.
+1. Check the public `health.json` (or `/health` on the full server) and the browser mode banner. An HTTP 200 proves availability only, not payment-provider connectivity.
 2. If the UI fails, test a clean clone with `npm ci`, build, test and start. Preserve the submitted release before changing anything.
 3. If PayPal times out, inspect the durable operation. `UNKNOWN`/`SUBMITTING` must stay locked. Reconcile using the original order and operation identifier. Do not create a second refund to “fix” a missing response.
 4. If Gemini fails, show the explicit extraction error. Use the labelled replay only for demonstration; do not silently present recorded evidence as live AI.

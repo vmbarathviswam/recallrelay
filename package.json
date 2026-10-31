@@ -6,6 +6,8 @@
   "type": "module",
   "scripts": {
     "build": "node scripts/build.mjs",
+    "build:demo": "node scripts/build-demo.mjs",
+    "preview:demo": "node scripts/preview-demo.mjs",
     "start": "node --env-file-if-exists=.env scripts/server.mjs",
     "dev": "npm run build && npm start",
     "test": "node --test test/*.test.mjs",

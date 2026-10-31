@@ -16,4 +16,4 @@ jobs:
             echo 'Judging period ended; no further check required.'
             exit 0
           fi
-          curl --fail --retry 2 --max-time 30 https://recallrelay.lightcast-2367.chatgpt.site/health
+          curl --fail --retry 2 --max-time 30 https://vmbarathviswam.github.io/recallrelay/health.json

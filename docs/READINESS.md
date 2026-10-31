@@ -4,7 +4,7 @@ This file distinguishes implemented behavior from external proof. Do not convert
 
 | Requirement | Implementation / verification |
 |---|---|
-| Working prototype | Node/SQLite local app and Worker/D1 hosting adapter; browser-verifiable interactive replay. |
+| Working prototype | Node/SQLite local app, Worker/D1 hosting adapter, and public browser/IndexedDB replay on GitHub Pages. Sites internet publishing is disabled for this workspace. |
 | PayPal purchases/refunds | Sandbox-only REST adapter, server pricing, buyer approval URL, capture, partial refund, status reads and signature verification implemented. Live credential verification remains required. |
 | Meaningful AI | Gemini multimodal label and notice extraction with structured validation and quotation grounding implemented. Live API execution requires a Gemini key. |
 | Human authority | Separate source verification, merchant reason/confirmation, expiring approval and persisted refund reservation. |
@@ -15,7 +15,7 @@ This file distinguishes implemented behavior from external proof. Do not convert
 | Real model proof | NOT YET VERIFIED at implementation time: no Gemini API key supplied in the session. Run live extraction and `npm run eval -- --live`. |
 | Public source/license | Public GitHub repository and root MIT license prepared; verify pushed repository and detectable license before submission. |
 | Demo video | Six-scenario 2:45 script and shot list prepared. A recorded public YouTube URL is a remaining submission task. |
-| Judging availability | Durable hosted replay and clean local run path, no trial-only dependency; operations calendar and daily health workflow through judging. Future account availability must be maintained. |
+| Judging availability | Static-hosted replay with browser-local persistence and clean local server run path, no trial-only dependency; operations calendar and daily health workflow through judging. Future account availability must be maintained. |
 
 ## Proof standards
 

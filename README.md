@@ -4,7 +4,7 @@
 
 Built for the [PayPal AI Hackathon](https://paypalaihackathon.devpost.com/). Original implementation created during the hackathon, October 31, 2026. MIT licensed.
 
-- [Hosted prototype](https://recallrelay.lightcast-2367.chatgpt.site)
+- [Public interactive replay](https://vmbarathviswam.github.io/recallrelay/)
 - [Public source](https://github.com/vmbarathviswam/recallrelay)
 - [Demo script: six scenarios in 2:45](docs/DEMO.md)
 - [Verification status and remaining submission work](docs/READINESS.md)
@@ -120,9 +120,19 @@ Import [the Postman collection](api/RecallRelay.postman_collection.json). Set `b
 
 ## Deployment and judging availability
 
-The same handler runs on Node/SQLite locally and a Sites Cloudflare Worker/D1 when hosted. Browser assets are bundled into the Worker, with no CDN dependency or commercial grid trial. `drizzle/` contains the generated schema migration; hosted publication applies it. The tracked `.openai/hosting.json` identifies the hosted project and `DB` binding. Hosted runtime secrets must be configured in the hosting platform and followed by redeployment; `.env` is local only.
+The full handler runs on Node/SQLite locally, and a Cloudflare Worker/D1 adapter is included. Browser assets are bundled into the Worker, with no CDN dependency or commercial grid trial. `drizzle/` contains the generated schema migration. `.openai/hosting.json` identifies the prepared Sites project and `DB` binding. Sites internet publishing is disabled for this workspace, so no public Worker deployment is claimed. Hosted runtime secrets must be configured in a compatible hosting platform; `.env` is local only.
 
-The public deployment intentionally runs credential-free replay. Keep real sandbox merchant data on a separately configured deployment, protected by the admin token or exact platform `MERCHANT_USER_ID`. Platform identity headers are trusted only on Sites; the local server strips incoming `oai-*` headers. Do not put public production data in the replay.
+The public GitHub Pages demo runs the same handler and domain rules entirely in the browser, with an IndexedDB repository. It has no backend, no provider keys and no live financial API calls. Synthetic state persists in that browser; clearing site storage removes it. Its approval and audit controls demonstrate behavior, not an authority boundary against a person editing their own browser. Keep real sandbox merchant data on the full Node app or a separately configured server deployment, protected by the admin token or exact Sites `MERCHANT_USER_ID`. Platform identity headers are trusted only on Sites; the local server strips incoming `oai-*` headers. Never add provider secrets to a Pages build.
+
+Build or preview the public replay separately:
+
+```sh
+npm run build:demo
+npm run preview:demo
+# http://127.0.0.1:4180/recallrelay/
+```
+
+The `Publish public replay` workflow tests and deploys Pages on pushes to `main`. A fork owner must enable GitHub Pages with GitHub Actions as the publishing source.
 
 Docker alternative:
 
