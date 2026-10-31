@@ -4,7 +4,7 @@ Executed October 31, 2026 on Node 26.10, Windows. CI uses Node 24 on Linux.
 
 | Check | Result |
 |---|---|
-| Automated domain/API/service/persistence suite | 133 tests passed; no failures or skipped tests |
+| Automated domain/API/service/persistence suite | 137 tests passed; no failures or skipped tests |
 | Deterministic matching regression | 12/12 passed; explicitly not model accuracy |
 | Production browser/Worker bundle | Build passed; valid ESM exporting `default.fetch` |
 | Drizzle schema generator | Passed; no pending schema change |

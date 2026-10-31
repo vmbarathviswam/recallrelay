@@ -8,7 +8,7 @@ export function initTheme() {
 }
 export function gridColors() {
   const dark=document.documentElement.dataset.theme==='dark';
-  return {backgroundColor:dark?'#111e25':'#ffffff',foregroundColor:dark?'#e4eeeb':'#203c35',headerBackgroundColor:dark?'#17282f':'#f0f6f3',headerTextColor:dark?'#b1c6bf':'#4b655c',borderColor:dark?'#30434a':'#dce7e1',accentColor:'#26a887',fontFamily:'Segoe UI, sans-serif',fontSize:13};
+  return {backgroundColor:dark?'#202121':'#fffefd',foregroundColor:dark?'#f1f1ed':'#292c2a',headerBackgroundColor:dark?'#262827':'#f6f6f2',headerTextColor:dark?'#b8bfba':'#5e6862',borderColor:dark?'#393d3a':'#e6e8e2',accentColor:'#26a887',fontFamily:'Segoe UI, sans-serif',fontSize:13};
 }
 const stages=[
   ['notice','01','Recall notice','Start with a trusted source.','Source document','Merchant-defined campaign','▧'],
@@ -71,7 +71,7 @@ document.addEventListener('pointermove',e=>{
 },{passive:true});
 document.addEventListener('click',e=>{
   const b=e.target.closest('button');if(!b||b.disabled||reduced.matches||document.documentElement.classList.contains('motion-paused'))return;
-  b.animate([{scale:'1'},{scale:'.97'},{scale:'1.015'},{scale:'1'}],{duration:320,easing:'ease-out'});
+  b.animate([{scale:'1'},{scale:'.97'},{scale:'1.015'},{scale:'1'}],{duration:260,easing:'ease-out'});
 });
 export function notify(message,error=false){
   const stack=document.querySelector('#toast');stack.className='toast-stack';

@@ -1,5 +1,15 @@
 # Interface upgrade — October 31, 2026
 
+## Editorial refinement
+
+The subsequent design pass reviewed [palakonweb.in](https://palakonweb.in/) in a live browser, including its typography and actual rendered layout. The reference combines an off-white canvas, narrow content framing, generous space, fine dividers, neutral pill controls and restrained accent details. Its display headings use Instrument Serif; RecallRelay deliberately retains a modern system sans-serif for the requested SaaS type scale rather than copying the portfolio's assets or identity.
+
+RecallRelay now uses a horizontal navigation bar, warm neutrals with one emerald accent, lighter metrics, and a working queue before the seven-step showcase. Hover/press/reveal transitions are 260–280ms. Notice extraction is shown as labeled fields and quotations. The activity journal shows readable summaries with expandable details; its complete JSON download remains available. Payment request identifiers are also expandable. Test-payment and replay disclosures remain explicit.
+
+The React Bits Spotlight Card, Aceternity catalog and Framekit Product UI catalog were rechecked for this pass. The dependency/CLI constraint described below still applies: this remains a native frontend with locally owned implementations, not an installed React component library.
+
+Validation after refinement: 137 tests pass, including four presentation checks for escaping hostile AI content, preserving zero/false values, quotations and missing fields. No payment, AI, database or business-rule source files changed.
+
 The visual layer uses emerald glass, quiet gradients, consistent rounded surfaces and a seven-step interactive workflow. Financial values remain static and readable. Workflow previews are illustrative navigation, not transaction progress or automatic approval.
 
 ## Catalog research and selection
