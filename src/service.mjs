@@ -47,7 +47,8 @@ export class Service {
       return await this.update(s => applyRefund(s, op.id, r, this.now()));
     } catch (e) {
       const uncertain = !(e instanceof PayPalError) || e.uncertain || e.status === 409;
-      await this.update(s => { const x = s.operations.find(x => x.id === op.id); if (!['COMPLETED','PENDING'].includes(x.status)) x.status = uncertain ? 'UNKNOWN' : 'REJECTED'; x.error = e instanceof PayPalError ? e.code : 'RESPONSE_UNCERTAIN'; x.debugId = e.debugId ?? null; journal(s, uncertain ? 'refund.response_uncertain' : 'refund.rejected', { operationId: op.id, error: x.error, debugId: x.debugId }, this.now()); });
+      const issue = e instanceof PayPalError ? e.details?.find(x => typeof x === 'string' && /^[A-Z0-9_]{1,100}$/.test(x)) || e.code : 'RESPONSE_UNCERTAIN';
+      await this.update(s => { const x = s.operations.find(x => x.id === op.id); if (!['COMPLETED','PENDING'].includes(x.status)) x.status = uncertain ? 'UNKNOWN' : 'REJECTED'; x.error = issue; x.debugId = e.debugId ?? null; if (!uncertain && ['REFUND_NOT_ALLOWED_AFTER_180_DAYS','CAPTURE_FULLY_REFUNDED','REFUND_AMOUNT_EXCEEDED'].includes(issue)) findOrder(s,op.orderId).providerHold = issue; journal(s, uncertain ? 'refund.response_uncertain' : 'refund.rejected', { operationId: op.id, error: x.error, debugId: x.debugId }, this.now()); });
       return { ...op, status: uncertain ? 'UNKNOWN' : 'REJECTED', message: uncertain ? 'The response is uncertain. Reconcile; do not issue another refund.' : 'PayPal rejected the refund. Review the payment before approving again.' };
     }
   }

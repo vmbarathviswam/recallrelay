@@ -1,5 +1,7 @@
 # Architecture and invariants
 
+The full server is the PayPal/Gemini integration target. The public GitHub Pages replay uses the same handler and domain module in-browser, replacing the persistence boundary with IndexedDB and fixing mode to replay. Its records survive reload, but browser controls are illustrative and cannot authorize a server payment. Provider keys never enter this build. Sites public publishing was disabled for this workspace; the Worker/D1 adapter remains available as source.
+
 ## Shape
 
 ```mermaid

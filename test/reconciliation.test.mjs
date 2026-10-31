@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import { fixture, consent, refund, NOW, ready } from './helpers.mjs';
 import { reserve, refundPlan } from '../src/domain.mjs';
 import { validateCapture } from '../src/paypal.mjs';
+import { PayPalError } from '../src/paypal.mjs';
 import { MemoryRepository } from '../src/store.mjs';
 import { drainWebhooks } from '../src/http.mjs';
 
@@ -80,4 +81,21 @@ for (const invalid of ['missing-id', 'bad-date', 'multiple-captures']) test('cap
   if (invalid === 'bad-date') cap.create_time = 'not-a-date';
   const captures = invalid === 'multiple-captures' ? [cap, cap] : [cap];
   assert.throws(() => validateCapture({ id: 'local', paypalOrderId: 'ORDER', totalCents: 7700 }, { id: 'ORDER', purchase_units: [{ custom_id: 'local', payments: { captures } }] }), { code: 'CAPTURE_MISMATCH' });
+});
+
+for (const status of ['REFUNDED', 'PARTIALLY_REFUNDED']) test('provider ' + status + ' without attributed history requires manual handling', () => {
+  const state = ready(); state.orders[0].captureStatus = status;
+  assert.equal(refundPlan(state, state.claims[0], NOW).route, 'manual');
+});
+
+test('real PayPal 422 issue shape records permanent manual hold', async () => {
+  const { service, id } = await fixture();
+  service.mode = 'sandbox'; service.refreshCapture = async () => {};
+  service.paypal = { refund: async () => { throw new PayPalError(422, 'UNPROCESSABLE_ENTITY', 'debug', ['CAPTURE_FULLY_REFUNDED']); } };
+  await service.approve(id, consent((await service.state()).claims[0]));
+  assert.equal((await service.execute(id)).status, 'REJECTED');
+  const state = await service.state();
+  assert.equal(state.operations[0].error, 'CAPTURE_FULLY_REFUNDED');
+  assert.equal(refundPlan(state, state.claims[0], NOW).route, 'manual');
+  await assert.rejects(service.approve(id, consent(state.claims[0])), { code: 'INELIGIBLE' });
 });

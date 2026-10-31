@@ -38,13 +38,14 @@ export function refundPlan(state, claim, now = Date.now(), ignoreOperationId) {
   const time = Date.parse(order.capturedAt);
   if (!Number.isFinite(time) || time > now) return { eligible: false, route: 'manual', reason: 'The capture date cannot be verified.', amountCents: 0 };
   if (now - time >= 180 * DAY) return { eligible: false, route: 'manual', reason: 'The 180-day refund window has closed. Arrange the approved remedy manually.', amountCents: 0 };
-  if (order.openDispute || order.externalRefundCents > 0 || order.providerMismatch) return { eligible: false, route: 'manual', reason: 'A dispute, unattributed external refund, or payment mismatch requires reconciliation.', amountCents: 0 };
+  if (order.openDispute || order.externalRefundCents > 0 || order.providerMismatch || order.providerHold) return { eligible: false, route: 'manual', reason: order.providerHold ? 'PayPal refused refund eligibility (' + order.providerHold + '). Handle this remedy manually.' : 'A dispute, unattributed external refund, or payment mismatch requires reconciliation.', amountCents: 0 };
   if (state.operations.some(x => x.captureId === order.captureId && x.id !== ignoreOperationId && ['SUBMITTING', 'UNKNOWN', 'PENDING'].includes(x.status))) return { eligible: false, route: 'reconcile', reason: 'This capture has an unresolved refund. Reconcile it before another approval.', amountCents: 0 };
   const applied = state.operations.filter(x => x.orderId === order.id && x.sku === item.sku && ['COMPLETED', 'PENDING'].includes(x.status)).reduce((a, x) => a + x.amountCents, 0);
   const captureRefunded = state.operations.filter(x => x.captureId === order.captureId && ['COMPLETED', 'PENDING'].includes(x.status)).reduce((a, x) => a + x.amountCents, 0);
   // Item allocations are fixed at purchase creation, including any tax/shipping.
   const amountCents = Math.min(item.grossCents - (item.priorRefundCents ?? 0) - applied, order.totalCents - (order.priorRefundCents ?? 0) - captureRefunded);
   if (amountCents <= 0) return { eligible: false, route: 'completed', reason: 'The eligible item has already been fully refunded.', amountCents: 0 };
+  if (order.captureStatus === 'REFUNDED' || order.captureStatus === 'PARTIALLY_REFUNDED' && !(order.priorRefundCents + captureRefunded > 0)) return { eligible: false, route: 'manual', reason: 'PayPal reports a refund but item-level history is incomplete. Reconcile the existing remedy manually.', amountCents: 0 };
   return { eligible: true, route: 'approval', reason: 'Verified affected item; merchant approval required.', amountCents, currency: 'USD', captureId: order.captureId, orderId: order.id, sku: item.sku, campaignRevision: campaign.revision, evidenceRevision: claim.evidenceRevision, totalCents: order.totalCents, priorCents: item.priorRefundCents ?? 0 };
 }
 export function newClaim(s, { orderId, sku }, now = Date.now()) {
