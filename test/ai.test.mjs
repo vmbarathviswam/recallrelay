@@ -1,0 +1,15 @@
+import{test}from'node:test';import assert from'node:assert/strict';import{validateExtraction,validateMedia,extractLabel,extractNotice}from'../src/ai.mjs';
+const valid={model:'N65',serial:'N65-2408-0182',ambiguous:false,confidence:.99,sourceText:'MODEL N65 SERIAL N65-2408-0182',reason:'Clear printed identifiers.'};
+test('AI valid output normalizes identifiers',()=>assert.equal(validateExtraction({...valid,model:'n65'}).model,'N65'));
+test('AI low confidence abstains',()=>assert.equal(validateExtraction({...valid,confidence:.5}).ambiguous,true));
+test('AI missing serial abstains',()=>assert.equal(validateExtraction({...valid,serial:null}).ambiguous,true));
+test('AI missing model abstains',()=>assert.equal(validateExtraction({...valid,model:null}).ambiguous,true));
+for(const bad of [{model:'<script>'},{confidence:NaN},{confidence:1.1},{ambiguous:'false'},{sourceText:123},{serial:4}])test('AI schema negative '+JSON.stringify(bad),()=>assert.throws(()=>validateExtraction({...valid,...bad}),{code:'INVALID_EXTRACTION'}));
+test('media SVG refused',()=>assert.throws(()=>validateMedia('a'.repeat(50),'image/svg+xml'),{code:'UNSUPPORTED_MEDIA'}));
+test('media mime spoof refused',()=>assert.throws(()=>validateMedia(btoa('not a png file at all for this test'),'image/png'),{code:'MEDIA_MISMATCH'}));
+test('oversized file refused',()=>assert.throws(()=>validateMedia('a'.repeat(2800001),'image/png'),{code:'INVALID_MEDIA'}));
+test('no key never falls back to fake live AI',async()=>await assert.rejects(extractLabel({}, {text:'N65'}),{code:'AI_NOT_CONFIGURED'}));
+test('provider outage performs no extraction',async()=>await assert.rejects(extractLabel({GEMINI_API_KEY:'test'},{text:'N65'},async()=>new Response('',{status:429})),{code:'AI_UNAVAILABLE'}));
+test('unparseable model output refused',async()=>await assert.rejects(extractLabel({GEMINI_API_KEY:'test'},{text:'N65'},async()=>Response.json({candidates:[{content:{parts:[{text:'not json'}]}}]})),{code:'INVALID_EXTRACTION'}));
+test('multimodal request includes image and exact schema',async()=>{let request;const image=btoa('\x89PNG\r\n\x1a\n'+'a'.repeat(30));const x=await extractLabel({GEMINI_API_KEY:'test'},{image,mimeType:'image/png'},async(u,init)=>{request=JSON.parse(init.body);return Response.json({candidates:[{content:{parts:[{text:JSON.stringify(valid)}]}}]});});assert(request.contents[0].parts.some(p=>p.inlineData));assert.equal(request.generationConfig.responseMimeType,'application/json');assert.equal(x.humanVerified,false);});
+test('notice quotation must exist verbatim in text',async()=>await assert.rejects(extractNotice({GEMINI_API_KEY:'test'},{text:'Fictional notice about chargers. Merchant review is required.'},async()=>Response.json({candidates:[{content:{parts:[{text:JSON.stringify({title:'Recall',models:['N65'],serialRestriction:null,remedy:null,quotes:['invented fact']})}]}}]})),{code:'UNGROUNDED_NOTICE'}));

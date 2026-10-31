@@ -1,0 +1,14 @@
+[
+ {"id":"affected-clear","model":"N65","serial":"N65-2408-0182","ambiguous":false,"expected":"matched"},
+ {"id":"affected-low-end","model":"N65","serial":"N65-2408-0000","ambiguous":false,"expected":"matched"},
+ {"id":"affected-high-end","model":"N65","serial":"N65-2408-9999","ambiguous":false,"expected":"matched"},
+ {"id":"case-normalization","model":"n65","serial":"n65-2408-0001","ambiguous":false,"expected":"matched"},
+ {"id":"wrong-model","model":"N66","serial":"N65-2408-0001","ambiguous":false,"expected":"unaffected"},
+ {"id":"wrong-batch","model":"N65","serial":"N65-2409-0001","ambiguous":false,"expected":"unaffected"},
+ {"id":"short-serial","model":"N65","serial":"N65-2408-001","ambiguous":false,"expected":"unaffected"},
+ {"id":"long-serial","model":"N65","serial":"N65-2408-00001","ambiguous":false,"expected":"unaffected"},
+ {"id":"missing-model","model":null,"serial":"N65-2408-0001","ambiguous":false,"expected":"clarification"},
+ {"id":"missing-serial","model":"N65","serial":null,"ambiguous":false,"expected":"clarification"},
+ {"id":"blurred","model":"N65","serial":"N65-2408-0001","ambiguous":true,"expected":"clarification"},
+ {"id":"letter-for-digit","model":"N65","serial":"N65-2408-OOO1","ambiguous":false,"expected":"unaffected"}
+]

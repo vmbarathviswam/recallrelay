@@ -1,0 +1,19 @@
+name: Judging demo availability
+on:
+  schedule:
+    - cron: '30 3 * * *'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  health:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check demo through the judging period
+        shell: bash
+        run: |
+          if [[ "$(date -u +%Y-%m-%d)" > "2026-12-16" ]]; then
+            echo 'Judging period ended; no further check required.'
+            exit 0
+          fi
+          curl --fail --retry 2 --max-time 30 https://recallrelay.lightcast-2367.chatgpt.site/health

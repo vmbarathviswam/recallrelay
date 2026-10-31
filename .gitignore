@@ -1,0 +1,14 @@
+dist/
+site.tar.gz
+node_modules/
+.env
+.env.*
+!.env.example
+.generated/
+.sites-runtime/
+outputs/
+data/
+*.log
+*.sqlite*
+.wrangler/
+.DS_Store

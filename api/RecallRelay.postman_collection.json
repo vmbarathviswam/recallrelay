@@ -1,0 +1,730 @@
+{
+  "info": {
+    "name": "RecallRelay · verified remedies",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": "Use replay locally with a cookie jar or sandbox with a merchant token. A real refund always requires separate human confirmation. Never publish token values."
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://127.0.0.1:4173"
+    },
+    {
+      "key": "admin_token",
+      "value": ""
+    },
+    {
+      "key": "claim_id",
+      "value": "case-RR-1042"
+    },
+    {
+      "key": "purchase_id",
+      "value": ""
+    },
+    {
+      "key": "evidence_revision",
+      "value": "1"
+    }
+  ],
+  "item": [
+    {
+      "name": "01 · Read explicit execution mode",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Authorization",
+            "value": "Bearer {{admin_token}}",
+            "disabled": false
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/api/config",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "config"
+          ]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"HTTP 200\",()=>pm.response.to.have.status(200));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "02 · Open workspace",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Authorization",
+            "value": "Bearer {{admin_token}}",
+            "disabled": false
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/api/state",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "state"
+          ]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"HTTP 200\",()=>pm.response.to.have.status(200));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "03 · Create mixed purchase",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Authorization",
+            "value": "Bearer {{admin_token}}",
+            "disabled": false
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/api/purchases",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "purchases"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"key\": \"postman-purchase-001\",\n  \"mixed\": true\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Created\",()=>pm.response.to.have.status(201));",
+              "pm.collectionVariables.set(\"purchase_id\",pm.response.json().id);",
+              "pm.test(\"Server priced mixed order\",()=>pm.expect(pm.response.json().totalCents).to.eql(7700));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "04 · Capture after buyer approval",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Authorization",
+            "value": "Bearer {{admin_token}}",
+            "disabled": false
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/api/purchases/{{purchase_id}}/capture",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "purchases",
+            "{{purchase_id}}",
+            "capture"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"HTTP 200\",()=>pm.response.to.have.status(200));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "05 · Open one remedy per purchase item",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Authorization",
+            "value": "Bearer {{admin_token}}",
+            "disabled": false
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/api/claims",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "claims"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"orderId\": \"{{purchase_id}}\",\n  \"sku\": \"NOVA-65\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Case created\",()=>pm.response.to.have.status(201));",
+              "pm.collectionVariables.set(\"claim_id\",pm.response.json().id);"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "06 · Live multimodal extraction (supply image base64)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Authorization",
+            "value": "Bearer {{admin_token}}",
+            "disabled": false
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/api/claims/{{claim_id}}/extract",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "claims",
+            "{{claim_id}}",
+            "extract"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"text\": \"MODEL N65 SERIAL N65-2408-8000\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"HTTP 200\",()=>pm.response.to.have.status(200));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "07 · Load clearly labelled replay sample",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Authorization",
+            "value": "Bearer {{admin_token}}",
+            "disabled": false
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/api/claims/{{claim_id}}/sample",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "claims",
+            "{{claim_id}}",
+            "sample"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"ambiguous\": false\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"HTTP 200\",()=>pm.response.to.have.status(200));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "08 · Merchant confirms original evidence",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Authorization",
+            "value": "Bearer {{admin_token}}",
+            "disabled": false
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/api/claims/{{claim_id}}/verify",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "claims",
+            "{{claim_id}}",
+            "verify"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"confirmed\": true,\n  \"revision\": 1\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"HTTP 200\",()=>pm.response.to.have.status(200));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "09 · Merchant approves exact remedy",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Authorization",
+            "value": "Bearer {{admin_token}}",
+            "disabled": false
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/api/claims/{{claim_id}}/approve",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "claims",
+            "{{claim_id}}",
+            "approve"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"confirmed\": true,\n  \"revision\": 1,\n  \"note\": \"Merchant verified the original label and purchase; remedy approved.\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"HTTP 200\",()=>pm.response.to.have.status(200));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "10 · Execute previously approved refund",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Authorization",
+            "value": "Bearer {{admin_token}}",
+            "disabled": false
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/api/claims/{{claim_id}}/execute",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "claims",
+            "{{claim_id}}",
+            "execute"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"HTTP 200\",()=>pm.response.to.have.status(200));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "11 · Reconcile an uncertain response",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Authorization",
+            "value": "Bearer {{admin_token}}",
+            "disabled": false
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/api/claims/{{claim_id}}/reconcile",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "claims",
+            "{{claim_id}}",
+            "reconcile"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"HTTP 200\",()=>pm.response.to.have.status(200));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "12 · Forged webhook must fail",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Authorization",
+            "value": "Bearer {{admin_token}}",
+            "disabled": false
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/api/webhooks/paypal",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "webhooks",
+            "paypal"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"id\": \"forged-postman\",\n  \"event_type\": \"PAYMENT.CAPTURE.REFUNDED\",\n  \"resource\": {\n    \"id\": \"forged\"\n  }\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Forged event refused\",()=>pm.response.to.have.status(403));",
+              "pm.test(\"Explicit refusal\",()=>pm.expect(pm.response.json().error).to.eql(\"FORGED_WEBHOOK\"));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "13 · Duplicate seeded claim must fail (replay)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Authorization",
+            "value": "Bearer {{admin_token}}",
+            "disabled": false
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/api/claims",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "claims"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"orderId\": \"RR-1042\",\n  \"sku\": \"NOVA-65\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Duplicate conflict\",()=>pm.response.to.have.status(409));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "14 · Export journal",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Authorization",
+            "value": "Bearer {{admin_token}}",
+            "disabled": false
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/api/audit/export",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "audit",
+            "export"
+          ]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"HTTP 200\",()=>pm.response.to.have.status(200));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "15 · Reset only my replay workspace",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Authorization",
+            "value": "Bearer {{admin_token}}",
+            "disabled": false
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/api/demo/reset",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "demo",
+            "reset"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"HTTP 200\",()=>pm.response.to.have.status(200));"
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}
