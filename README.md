@@ -9,6 +9,7 @@ Built for the [PayPal AI Hackathon](https://paypalaihackathon.devpost.com/). Ori
 - [Public source](https://github.com/vmbarathviswam/recallrelay)
 - [Demo script: six scenarios in 2:45](docs/DEMO.md)
 - [Verification status and remaining submission work](docs/READINESS.md)
+- [Interface design, component research and accessibility](docs/UI-DESIGN.md)
 
 ![Public RecallRelay replay dashboard](docs/screenshots/dashboard.jpg)
 
