@@ -1,0 +1,18 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "recallrelay-sandbox",
+  "main": "dist/server/index.js",
+  "compatibility_date": "2026-10-23",
+  "workers_dev": true,
+  "vars": {
+    "PAYPAL_MODE": "sandbox",
+    "GEMINI_MODEL": "gemini-3.8-flash",
+    "APP_ORIGIN": "REPLACE_WITH_YOUR_WORKER_HTTPS_ORIGIN"
+  },
+  "d1_databases": [{
+    "binding": "DB",
+    "database_name": "recallrelay-sandbox",
+    "database_id": "REPLACE_WITH_CREATED_D1_DATABASE_ID",
+    "migrations_dir": "drizzle"
+  }]
+}

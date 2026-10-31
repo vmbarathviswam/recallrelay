@@ -11,11 +11,13 @@ This file distinguishes implemented behavior from external proof. Do not convert
 | Substantive AG Grid | Response and audit grids, custom customer/status renderers, filtering/sorting, keyboard review, linked exposure widgets and completion dashboard. No AG Studio claim. |
 | Automated tests | 131 passing domain, API, service, AI validation and persistence tests, plus 12 deterministic matching regression cases. Provider transports are test doubles unless explicitly live. See [validation](VALIDATION.md). |
 | Edge-case demo | Labelled replay covers mixed-item refund, ambiguity, old payment, duplicate claim, uncertain response recovery and forged webhook rejection. |
-| Real sandbox proof | NOT YET VERIFIED at implementation time: no PayPal client credentials/buyer account supplied in the session. Run `verify:sandbox` and record actual identifiers after setup. |
-| Real model proof | NOT YET VERIFIED at implementation time: no Gemini API key supplied in the session. Run live extraction and `npm run eval -- --live`. |
+| Real sandbox proof | Sandbox OAuth authentication verified and an actual $77 mixed order created on October 31. Buyer approval, capture and merchant-approved refund remain pending; order creation alone is not payment proof. |
+| Real model proof | Key authenticated successfully against the real model-list API. Actual image extraction remains unverified: current models returned temporary 503/high-demand errors or timed out; the older 2.5 model is unavailable to new users. No sample has been substituted for live proof. |
 | Public source/license | [Public GitHub repository](https://github.com/vmbarathviswam/recallrelay) pushed; GitHub reports public visibility and detected MIT license. |
 | Demo video | Six-scenario 2:45 script and shot list prepared. A recorded public YouTube URL is a remaining submission task. |
 | Judging availability | Static-hosted replay with browser-local persistence and clean local server run path, no trial-only dependency; operations calendar and daily health workflow through judging. Future account availability must be maintained. |
+
+The full-server [Cloudflare deployment path](CLOUDFLARE.md) is prepared. Authentication, actual deployment, signed webhook delivery and hosted live-provider verification still need completion.
 
 ## Proof standards
 

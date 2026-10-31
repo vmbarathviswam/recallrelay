@@ -12,4 +12,6 @@ data/
 *.log
 *.sqlite*
 .wrangler/
+wrangler.local.jsonc
+.dev.vars*
 .DS_Store
