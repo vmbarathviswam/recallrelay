@@ -16,7 +16,7 @@ export function configuration(env) {
   const mode = env.PAYPAL_MODE || 'replay';
   insist(['replay','sandbox'].includes(mode), 'LIVE_MODE_REFUSED', 'Only replay and PayPal sandbox are supported.', 503);
   insist(mode !== 'sandbox' || env.ADMIN_TOKEN?.length >= 32, 'ADMIN_NOT_CONFIGURED', 'Sandbox requires a strong merchant admin secret.', 503);
-  return { mode, ai: !!env.GEMINI_API_KEY, model: env.GEMINI_MODEL || 'gemini-3.8-flash', paypalConfigured: !!env.PAYPAL_CLIENT_ID && !!env.PAYPAL_CLIENT_SECRET, webhookConfigured: !!env.PAYPAL_WEBHOOK_ID, judgingThrough: '2026-12-15', database: env.DB ? 'D1' : 'SQLite/local adapter' };
+  return { mode, ai: !!env.GEMINI_API_KEY, model: env.GEMINI_MODEL || 'gemini-3.5-flash-lite', paypalConfigured: !!env.PAYPAL_CLIENT_ID && !!env.PAYPAL_CLIENT_SECRET, webhookConfigured: !!env.PAYPAL_WEBHOOK_ID, judgingThrough: '2026-12-15', database: env.DB ? 'D1' : 'SQLite/local adapter' };
 }
 async function merchantAllowed(req, env) {
   // Platform headers are accepted only on hosted deployments; the local server strips them.

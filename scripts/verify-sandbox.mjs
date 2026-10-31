@@ -17,7 +17,9 @@ if(command==='purchase'){
  console.log('Real sandbox capture verified. Case '+claim.id+' is ready for label upload and merchant approval in the UI.');
  console.log('Upload a label matching registered serial '+purchase.items[0].serial+'. Then run: npm run verify:sandbox -- evidence '+claim.id);
 }else if(command==='evidence'){
- const id=process.argv[3],s=await call('/api/state'),c=s.claims.find(x=>x.id===id);if(!c||c.operation?.status!=='COMPLETED')throw new Error('No completed refund for that case. Finish human approval and execution in the UI first.');
+ const id=process.argv[3];if(!id)throw new Error('Supply the case ID.');
+ await call('/api/claims/'+id+'/reconcile',{});
+ const s=await call('/api/state'),c=s.claims.find(x=>x.id===id);if(!c||c.operation?.status!=='COMPLETED')throw new Error('No completed refund for that case. Finish human approval and execution in the UI first.');
  if(c.operation.refundId.startsWith('REPLAY'))throw new Error('Replay evidence refused.');
  await mkdir('outputs/sandbox-evidence',{recursive:true});
  await writeFile('outputs/sandbox-evidence/refund.json',JSON.stringify({checkedAt:new Date().toISOString(),mode:'sandbox',orderId:c.order.paypalOrderId,captureId:c.order.captureId,orderTotalCents:c.order.totalCents,refundedCents:c.operation.amountCents,refundId:c.operation.refundId,approvalId:c.operation.approvalId,debugId:c.operation.debugId,audit:s.audit.filter(x=>x.details.claimId===id||x.details.operationId===c.operation.id)},null,2));

@@ -85,8 +85,11 @@ export function applyRefund(s, id, result, now = Date.now()) {
   insist(typeof result.id === 'string' && result.id.length > 0 && (!result.custom_id || result.custom_id === op.id) && result.amount?.currency_code === op.currency && cents(result.amount.value) === op.amountCents && ['COMPLETED', 'PENDING', 'FAILED', 'CANCELLED'].includes(result.status), 'REFUND_MISMATCH', 'PayPal refund identity, status or amount did not match the approved operation.');
   insist(!op.refundId || op.refundId === result.id, 'REFUND_MISMATCH', 'PayPal returned a different refund identifier.');
   insist(op.status !== 'COMPLETED' || result.status === 'COMPLETED', 'STATE_REGRESSION', 'A completed refund cannot regress.');
-  op.refundId = result.id; op.status = result.status; op.updatedAt = now; op.debugId = result.debugId ?? null;
-  journal(s, 'refund.' + result.status.toLowerCase(), { operationId: op.id, refundId: result.id, amountCents: op.amountCents, debugId: op.debugId }, now); return op;
+  const changed = op.refundId !== result.id || op.status !== result.status;
+  op.refundId = result.id; op.status = result.status; op.lastCheckedAt = now;
+  if (changed) op.updatedAt = now;
+  op.debugId = result.debugId ?? op.debugId ?? null;
+  if (changed) journal(s, 'refund.' + result.status.toLowerCase(), { operationId: op.id, refundId: result.id, amountCents: op.amountCents, debugId: op.debugId }, now); return op;
 }
 export function summarize(s, now = Date.now()) {
   const rows = s.claims.map(c => { const o = findOrder(s, c.orderId), p = refundPlan(s, c, now), op = [...s.operations].reverse().find(x => x.claimId === c.id); const status = op && ['COMPLETED', 'PENDING', 'UNKNOWN', 'SUBMITTING'].includes(op.status) ? (op.status === 'COMPLETED' ? 'completed' : 'reconcile') : p.route; return { ...c, customer: o.customer, item: o.items.find(x => x.sku === c.sku)?.name, order: o, plan: p, status, operation: op, approval: c.approval ? { ...c.approval, hash: undefined } : null }; });

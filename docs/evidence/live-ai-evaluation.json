@@ -1,0 +1,98 @@
+{
+  "kind": "deterministic matching regression (not AI accuracy)",
+  "date": "2026-10-31T05:04:38.193Z",
+  "passed": 12,
+  "total": 12,
+  "results": [
+    {
+      "id": "affected-clear",
+      "expected": "matched",
+      "actual": "matched"
+    },
+    {
+      "id": "affected-low-end",
+      "expected": "matched",
+      "actual": "matched"
+    },
+    {
+      "id": "affected-high-end",
+      "expected": "matched",
+      "actual": "matched"
+    },
+    {
+      "id": "case-normalization",
+      "expected": "matched",
+      "actual": "matched"
+    },
+    {
+      "id": "wrong-model",
+      "expected": "unaffected",
+      "actual": "unaffected"
+    },
+    {
+      "id": "wrong-batch",
+      "expected": "unaffected",
+      "actual": "unaffected"
+    },
+    {
+      "id": "short-serial",
+      "expected": "unaffected",
+      "actual": "unaffected"
+    },
+    {
+      "id": "long-serial",
+      "expected": "unaffected",
+      "actual": "unaffected"
+    },
+    {
+      "id": "missing-model",
+      "expected": "clarification",
+      "actual": "clarification"
+    },
+    {
+      "id": "missing-serial",
+      "expected": "clarification",
+      "actual": "clarification"
+    },
+    {
+      "id": "blurred",
+      "expected": "clarification",
+      "actual": "clarification"
+    },
+    {
+      "id": "letter-for-digit",
+      "expected": "unaffected",
+      "actual": "unaffected"
+    }
+  ],
+  "liveAI": {
+    "run": true,
+    "syntheticImages": true,
+    "results": [
+      {
+        "file": "label-clear.png",
+        "passed": true,
+        "model": "N65",
+        "serial": "N65-2408-8000",
+        "abstained": false,
+        "mode": "Gemini · gemini-3.5-flash-lite"
+      },
+      {
+        "file": "label-unaffected.png",
+        "passed": true,
+        "model": "N66",
+        "serial": "N66-2409-8000",
+        "abstained": false,
+        "mode": "Gemini · gemini-3.5-flash-lite"
+      },
+      {
+        "file": "label-ambiguous.png",
+        "passed": true,
+        "model": "N65",
+        "serial": null,
+        "abstained": true,
+        "mode": "Gemini · gemini-3.5-flash-lite"
+      }
+    ]
+  }
+}

@@ -1,11 +1,16 @@
+param(
+  [ValidatePattern('^N65-2408-[0-9]{4}$')][string]$Serial,
+  [string]$OutputDirectory
+)
 Add-Type -AssemblyName System.Drawing
-$sampleRoot = [IO.Path]::GetFullPath((Join-Path $PSScriptRoot '..\samples'))
+$sampleRoot = if ($OutputDirectory) { [IO.Path]::GetFullPath($OutputDirectory) } else { [IO.Path]::GetFullPath((Join-Path $PSScriptRoot '..\samples')) }
 New-Item -ItemType Directory -Force -Path $sampleRoot | Out-Null
 $cases = @(
   @{Name='label-clear'; Model='N65'; Serial='N65-2408-8000'},
   @{Name='label-unaffected'; Model='N66'; Serial='N66-2409-8000'},
   @{Name='label-ambiguous'; Model='N65'; Serial='[serial unreadable]'}
 )
+if ($Serial) { $cases = @(@{Name=('label-' + $Serial); Model='N65'; Serial=$Serial}) }
 foreach ($sample in $cases) {
   $bitmap = New-Object Drawing.Bitmap(900, 420)
   $graphics = [Drawing.Graphics]::FromImage($bitmap)
@@ -22,4 +27,4 @@ foreach ($sample in $cases) {
   $bitmap.Save((Join-Path $sampleRoot ($sample.Name + '.png')), [Drawing.Imaging.ImageFormat]::Png)
   $graphics.Dispose(); $bitmap.Dispose(); $brush.Dispose(); $heading.Dispose(); $body.Dispose(); $small.Dispose()
 }
-Write-Output 'Generated three explicitly synthetic label images.'
+Write-Output ('Generated ' + $cases.Count + ' explicitly synthetic label image(s).')

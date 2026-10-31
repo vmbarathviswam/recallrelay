@@ -37,7 +37,9 @@ Optional: copy `.env.example` to `.env` (`Copy-Item .env.example .env` in PowerS
 
 ## Enable real multimodal AI
 
-Set `GEMINI_API_KEY` in untracked `.env`. The default model is `gemini-3.8-flash`; override `GEMINI_MODEL` with a compatible structured-output model if needed. Keep the key on the server.
+Set `GEMINI_API_KEY` in untracked `.env`. The default model is `gemini-3.5-flash-lite`; override `GEMINI_MODEL` with a compatible structured-output model if needed. Keep the key on the server.
+
+This default was verified against the real API on October 31. The higher-capacity model returned temporary service errors during testing; the model change is explicit rather than a silent substitution of sample results. [Live evaluation results](docs/evidence/live-ai-evaluation.json) distinguish actual extraction from deterministic matching checks.
 
 1. Open a case → **Supply or replace evidence**.
 2. Upload a PNG, JPEG, WebP or PDF; optional text must transcribe the source.
@@ -51,6 +53,8 @@ For notices: save the source text first, then **Extract with live AI** (optional
 ## Enable real PayPal sandbox payments
 
 Use a PayPal developer sandbox **business** account and a separate sandbox **personal buyer** account. Create a sandbox REST app and configure:
+
+For the supplied USD demo, the verified run used a US Personal sandbox buyer. Account country and receiving-currency settings affect sandbox checkout too. If both accounts are India-based, use an appropriate international sandbox buyer for this test; do not change your real account's country. Test credentials work only on `sandbox.paypal.com`.
 
 ```dotenv
 PAYPAL_MODE=sandbox
@@ -81,7 +85,9 @@ npm run verify:sandbox -- capture <purchase-id>
 npm run verify:sandbox -- evidence <claim-id>
 ```
 
-Evidence files go to ignored `outputs/sandbox-evidence/`. They contain provider identifiers and outcomes, not tokens. Inspect before publishing. This verifier refuses replay mode. **The repository does not claim a completed real sandbox run until those credentials and actual buyer approval have been supplied.**
+Evidence files go to ignored `outputs/sandbox-evidence/`. They contain provider identifiers and outcomes, not tokens. Inspect before publishing. This verifier refuses replay mode. A buyer-approved sandbox capture and merchant-approved partial refund were completed on October 31, 2026. See [redacted live verification](docs/evidence/live-verification.json). The public Pages build remains a replay; full-server hosting and signed webhook delivery are still pending.
+
+If the purchase serial differs from the first sample, Windows users can generate a matching, explicitly synthetic test label with `./scripts/create-samples.ps1 -Serial N65-2408-8001 -OutputDirectory outputs/sandbox-evidence`. Use the serial actually registered to that purchase. This creates a demo fixture, not evidence about a real physical product.
 
 ## Webhooks and reconciliation
 

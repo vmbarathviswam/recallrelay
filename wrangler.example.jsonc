@@ -6,7 +6,7 @@
   "workers_dev": true,
   "vars": {
     "PAYPAL_MODE": "sandbox",
-    "GEMINI_MODEL": "gemini-3.8-flash",
+    "GEMINI_MODEL": "gemini-3.5-flash-lite",
     "APP_ORIGIN": "REPLACE_WITH_YOUR_WORKER_HTTPS_ORIGIN"
   },
   "d1_databases": [{

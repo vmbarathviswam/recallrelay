@@ -1,0 +1,30 @@
+{
+  "checkedAt": "2026-10-31T05:10:58.717Z",
+  "mode": "real PayPal sandbox and real Gemini API",
+  "syntheticProductAndRecall": true,
+  "purchase": {
+    "currency": "USD",
+    "capturedCents": 7700,
+    "providerStatus": "PARTIALLY_REFUNDED"
+  },
+  "refund": {
+    "status": "COMPLETED",
+    "amountCents": 5900,
+    "unaffectedCableCents": 1800,
+    "merchantVerifiedEvidence": true,
+    "merchantApprovalRecorded": true,
+    "providerReconciliationPerformed": true
+  },
+  "ai": {
+    "mode": "Gemini · gemini-3.5-flash-lite",
+    "model": "N65",
+    "serial": "N65-2408-8001",
+    "ambiguous": false
+  },
+  "guardrails": {
+    "unsignedWebhookHttp": 403,
+    "duplicateClaimHttp": 409,
+    "operationCountBefore": 1,
+    "operationCountAfter": 1
+  }
+}

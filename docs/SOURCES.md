@@ -12,6 +12,7 @@ Reviewed October 31, 2026. Confirm current provider requirements when configurin
 - [Webhook integration and verification](https://developer.paypal.com/api/rest/webhooks/rest/)
 - [Google Gemini structured output](https://ai.google.dev/gemini-api/docs/structured-output)
 - [Gemini 3.8 Flash](https://ai.google.dev/gemini-api/docs/models/gemini-3.8-flash/)
+- [Gemini API and supported models, including Flash-Lite](https://ai.google.dev/gemini-api/docs/interactions-overview)
 - [AG Grid JavaScript quick start](https://www.ag-grid.com/javascript-data-grid/getting-started/)
 - [CPSC recall API](https://www.cpsc.gov/Recalls/CPSC-Recalls-Application-Program-Interface-API-Information)
 
