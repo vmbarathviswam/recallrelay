@@ -9,6 +9,8 @@ Built for the [PayPal AI Hackathon](https://paypalaihackathon.devpost.com/). Ori
 - [Demo script: six scenarios in 2:45](docs/DEMO.md)
 - [Verification status and remaining submission work](docs/READINESS.md)
 
+![Public RecallRelay replay dashboard](docs/screenshots/dashboard.jpg)
+
 ## What it does
 
 A merchant turns a recall notice into a bounded campaign, reviews product-label evidence, links it to a purchase, and approves an exact remedy. The desk shows an AG Grid response queue, a source-evidence drawer, refund exposure by next step, completion tracking, and an exportable activity journal.

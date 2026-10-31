@@ -14,6 +14,8 @@ Executed October 31, 2026 on Node 26.10, Windows. CI uses Node 24 on Linux.
 | Browser uncertain response | Verified source, approved, simulated lost response, observed UNKNOWN, reconciled to original completed refund |
 | Public replay persistence | Browser/IndexedDB build completed a $59 remedy and retained the original refund and completion metrics after page reload |
 | Public source / Linux CI | GitHub API confirms public repository and detected MIT license; clean Linux Node 24 CI passed |
+| Public deployment | GitHub Pages publication succeeded; public HTTPS dashboard and ambiguous-label review opened successfully in a separate browser tab |
+| External availability | The GitHub Actions `Judging demo availability` workflow passed against the public URL; daily checks are configured through judging |
 | Real PayPal proof verifier | Correctly refused to produce evidence because sandbox credentials are absent |
 | Real Gemini evaluation | Not run: no Gemini API key present |
 

@@ -4,6 +4,8 @@ Record the actual running UI, 1080p if possible. Narration below is approximatel
 
 **Critical recording condition:** record scenario 1 against the real PayPal sandbox with real Gemini extraction after credentials are configured. If not completed, explicitly identify it as replay and do not claim live integration proof. The remaining synthetic edge cases are deliberately labelled replay. Cut between modes with an on-screen caption.
 
+Use the full Node/server application for scenario 1. The public GitHub Pages replay deliberately has no live provider access; it is suitable for the labelled edge-case demonstrations.
+
 | Time | Scenario and screen action | Narration |
 |---|---|---|
 | 0:00–0:12 | Overview, notice and response queue. | “A recall notice is only the beginning. A small merchant still needs to find affected purchases, check evidence, and return the right amount. RecallRelay brings that work into one response desk.” |
