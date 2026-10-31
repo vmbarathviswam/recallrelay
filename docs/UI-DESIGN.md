@@ -1,16 +1,14 @@
-# Interface upgrade — October 31, 2026
+# Visual product redesign — October 31, 2026
 
-## Editorial refinement
+The document-like layout has been replaced with a sidebar application shell, a dimensional animated hero, icon-based metric cards, real-state donut and exposure charts, custom AG Grid customer/status/amount cells, and a connected seven-node workflow with illustrated mini-previews. Light and dark modes share semantic color tokens. No provider, database, or domain logic changed.
 
-The subsequent design pass reviewed [palakonweb.in](https://palakonweb.in/) in a live browser, including its typography and actual rendered layout. The reference combines an off-white canvas, narrow content framing, generous space, fine dividers, neutral pill controls and restrained accent details. Its display headings use Instrument Serif; RecallRelay deliberately retains a modern system sans-serif for the requested SaaS type scale rather than copying the portfolio's assets or identity.
+Evidence review is now a two-column workspace. The actual uploaded image is the main surface, with extracted model and serial cards alongside the image boundary. Extraction does not obscure, distort, or fabricate source pixels. Recorded replay labels are explicitly illustrative; an absent source image gets an illustrated upload state. Refunds use an itemized receipt, the existing merchant verification and approval controls, a new native confirmation dialog showing the approved plan amount, and a provider-status result card. Only a completed operation gets the animated success check.
 
-RecallRelay now uses a horizontal navigation bar, warm neutrals with one emerald accent, lighter metrics, and a working queue before the seven-step showcase. Hover/press/reveal transitions are 260–280ms. Notice extraction is shown as labeled fields and quotations. The activity journal shows readable summaries with expandable details; its complete JSON download remains available. Payment request identifiers are also expandable. Test-payment and replay disclosures remain explicit.
+The earlier palakonweb.in research informed typography and spacing. This pass prioritizes visual product components over the earlier editorial layout. Long explanations are disclosed through details panels; payment safeguards and test/replay labels remain visible. Financial amounts stay exact and static rather than counting through misleading intermediate values.
 
-The React Bits Spotlight Card, Aceternity catalog and Framekit Product UI catalog were rechecked for this pass. The dependency/CLI constraint described below still applies: this remains a native frontend with locally owned implementations, not an installed React component library.
+## Source ownership
 
-Validation after refinement: 137 tests pass, including four presentation checks for escaping hostile AI content, preserving zero/false values, quotations and missing fields. No payment, AI, database or business-rule source files changed.
-
-The visual layer uses emerald glass, quiet gradients, consistent rounded surfaces and a seven-step interactive workflow. Financial values remain static and readable. Workflow previews are illustrative navigation, not transaction progress or automatic approval.
+36 Lucide SVG icons are vendored from release 0.468.0 (ISC). The pointer-light treatment is adapted from React Bits SpotlightCard at MIT-licensed commit `5da2b94789dc3f4d53ff6716606ceaa3bd1edb90`. Current React Bits main had a more restrictive license; its source was not used. Both pinned licenses and original CSS are retained in [web/vendor](../web/vendor/README.md). All other glass, ambient-orb, beam, preview, chart and motion patterns are original native CSS/SVG/JavaScript implementations informed by the catalog research below. No new runtime UI packages were added.
 
 ## Catalog research and selection
 
@@ -29,15 +27,15 @@ All six catalogs were reviewed. Component counts and free/pro availability chang
 
 This application is native JavaScript, not React. The requested no-new-runtime-dependencies rule conflicts with directly installing React/Base UI/Motion components: Wensity explicitly documents those as normal npm dependencies even when its own wrapper is copied as source. React Bits also requires its listed dependencies after copying.
 
-Accordingly, `web/premium.mjs` and the glass system in `web/style.css` are original native implementations of selected visual patterns, **not installed versions of those React libraries**. No shadcn initialization, React migration, Base UI package, paid component, third-party animation runtime, CDN, font request or WebGL was added. The project MIT license covers the original implementation. This is an intentional deviation from the Base UI/CLI request to preserve the stricter dependency and UI-only constraints.
+Accordingly, `web/visuals.mjs`, `web/premium.mjs` and `web/style.css` implement the selected patterns natively, with the pinned SpotlightCard adaptation and Lucide assets described above. They are **not installed React versions of those libraries**. No shadcn initialization, React migration, Base UI package, paid component, third-party animation runtime, CDN, font request or WebGL was added. The project MIT license covers original implementation; vendored notices retain their upstream terms. This is an intentional deviation from the Base UI/CLI request to preserve the stricter dependency and UI-only constraints.
 
 ## Interaction and accessibility
 
 - All seven workflow cards are keyboard-operable buttons navigating to existing workspaces. Navigation only; no financial operation or evidence verification is triggered.
 - Appearance toggles light/dark colors, including AG Grid, and persists only the theme locally. Provider credentials remain in existing page memory.
-- Native dialogs preserve modal focus trapping and Escape. Closing restores the opener, or the cases navigation if a render replaced it.
+- Native dialogs preserve modal focus trapping and Escape. Closing restores the opener, or the cases navigation if a render replaced it. Evidence updates preserve focus on the current control. Refund confirmation defaults focus to cancel; cancel does not call the payment API.
 - Native selects retain platform keyboard behavior. Search focus has a visible outline. Active navigation exposes `aria-current` and icon-only mobile controls retain accessible names.
-- Toasts stack up to three, announce through the existing live region, allow dismissal, and pause expiry on hover/focus.
+- Toasts stack up to three, announce through the existing live region, allow dismissal, and pause expiry on hover/focus. A manual native popover keeps them visible above modal dialogs without stealing focus.
 - Reduced-motion styles show all reveal content immediately, disable decorative transitions, and suppress JS press/spotlight motion. An additional pause button stops decorative motion. Reduced transparency and forced-colors fallbacks are included.
 - Amounts are never count-up animations. Uncertainty, approval gates and simulated/live indicators retain their existing meaning.
 
@@ -47,6 +45,8 @@ No heavy animation modules exist to lazy-load. One delegated pointer handler sch
 
 ## Validation
 
-- 133 existing tests pass; both browser replay and full Worker builds succeed; Worker artifact validation passes.
-- Browser checked: theme switching, workflow navigation, case search, ambiguous-label drawer with disabled approval, Escape dismissal with restored focus, and 390px mobile layout.
-- This is focused browser verification, not a full screen-reader certification or a measured 60fps guarantee.
+- 142 tests pass, including five new visual safety checks: empty chart honesty, reconciliation versus completion, hostile text escaping, absent-source handling, and exact approved-plan amount in confirmation.
+- Both the browser replay and Worker builds succeed; ESM artifact validation and all 12 deterministic matching cases pass.
+- Browser checked: light/dark appearance, seven connected nodes, search, mobile containment at 390px, icon navigation, ambiguous label with disabled approval, native dialog dismissal, cancel restoring focus, and an isolated replay verification → approval → confirmation → completed $59 refund.
+- Motion pause was checked against computed animation state. Reduced-motion, reduced-transparency and forced-colors styles are present; this is not a full assistive-technology certification or a measured 60fps guarantee.
+- Hosted cases and payment records remain preserved; UI verification does not require another real provider transaction.

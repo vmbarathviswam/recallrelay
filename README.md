@@ -11,7 +11,7 @@ Built for the [PayPal AI Hackathon](https://paypalaihackathon.devpost.com/). Ori
 - [Verification status and remaining submission work](docs/READINESS.md)
 - [Interface design, component research and accessibility](docs/UI-DESIGN.md)
 
-![Public RecallRelay replay dashboard](docs/screenshots/dashboard.jpg)
+![Public RecallRelay replay dashboard](docs/screenshots/visual-dashboard.png)
 
 ## What it does
 

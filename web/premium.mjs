@@ -1,4 +1,5 @@
-// Repo-owned, dependency-free visual components. See docs/UI-DESIGN.md.
+// Repo-owned visual components. See docs/UI-DESIGN.md and vendor licenses.
+import { icon } from './visuals.mjs';
 const reduced = matchMedia('(prefers-reduced-motion: reduce)');
 let observer;
 let resizeObserver;
@@ -8,7 +9,7 @@ export function initTheme() {
 }
 export function gridColors() {
   const dark=document.documentElement.dataset.theme==='dark';
-  return {backgroundColor:dark?'#202121':'#fffefd',foregroundColor:dark?'#f1f1ed':'#292c2a',headerBackgroundColor:dark?'#262827':'#f6f6f2',headerTextColor:dark?'#b8bfba':'#5e6862',borderColor:dark?'#393d3a':'#e6e8e2',accentColor:'#26a887',fontFamily:'Segoe UI, sans-serif',fontSize:13};
+  return {backgroundColor:dark?'#141f25':'#ffffff',foregroundColor:dark?'#eef6f4':'#203a3d',headerBackgroundColor:dark?'#19262e':'#f5f8f8',headerTextColor:dark?'#adbfca':'#62787c',borderColor:dark?'#2a3a44':'#e6edef',accentColor:'#119c85',fontFamily:'Segoe UI, sans-serif',fontSize:13};
 }
 const stages=[
   ['notice','01','Recall notice','Start with a trusted source.','Source document','Merchant-defined campaign','▧'],
@@ -20,7 +21,9 @@ const stages=[
   ['audit','07','Reconciliation','Close the loop with provider proof.','Payment → Refund → Journal','Verified status, retained history','⟳']
 ];
 export function workflow() {
-  return `<section class="workflow" aria-labelledby="workflow-title"><div class="workflow-heading"><div><div class="eyebrow">THE PATH TO RESOLUTION</div><h2 id="workflow-title">Seven steps. Every decision connected.</h2><p>Explore the workflow. You stay in control of every remedy.</p></div><span class="workflow-tag">AI-assisted. Merchant-led.</span></div><ol class="flow-track">${stages.map(([page,n,title,copy,preview,caption,icon])=>`<li><button class="flow-card" data-workflow="${page}" aria-label="${title}: open ${page}"><span class="flow-top"><span class="flow-icon" aria-hidden="true">${icon}</span><span>${n}</span></span><strong>${title}</strong><span class="flow-copy">${copy}</span><span class="flow-preview"><span class="preview-dots" aria-hidden="true">● ● ●</span><b>${preview}</b><small>${caption}</small><i aria-hidden="true"></i></span><span class="flow-open">Explore workspace <span aria-hidden="true">↗</span></span></button><span class="flow-beam" aria-hidden="true"></span></li>`).join('')}</ol></section>`;
+  const glyphs=['file-text','search','upload','sparkles','shield-check','wallet','receipt'];
+  const previews=[`<i></i><i></i><i></i><b>${icon('file-text')}</b>`,`<b>N65</b><i>${icon('check')}</i><b>N65</b>`,`<b>${icon('image')}</b><span>${icon('upload')}</span>`,`<span>${icon('sparkles')}</span><i></i><i></i><i></i>`,`<b>${icon('shield-check')}</b><span>Human gate</span>`,`<b>$59<small>of $77</small></b><span>${icon('wallet')}</span>`,`<b>${icon('circle-check')}</b><i></i><i></i>`];
+  return `<section class="workflow panel" aria-labelledby="workflow-title"><div class="workflow-heading"><h2 id="workflow-title">${icon('refresh-cw')}The resolution flow</h2><span class="tiny-pill">INTERACTIVE WORKFLOW GUIDE</span></div><ol class="flow-track">${stages.map(([page,n,title,copy,preview,caption],i)=>`<li><button class="flow-card spotlight-card" data-workflow="${page}" aria-label="${title}: open ${page}"><span class="flow-top"><span class="flow-icon">${icon(glyphs[i])}</span>${icon('arrow-up-right')}</span><strong>${title}</strong><span class="node-preview preview-${i}" aria-hidden="true">${previews[i]}</span><span class="node-status">${icon(i===4?'lock-keyhole':i===3?'sparkles':'circle-check')}${['Trusted source','Exact match','Source image','Structured facts','Merchant only','Item-level','Provider proof'][i]}</span></button></li>`).join('')}</ol><div class="workflow-legend"><span>${icon('sparkles')}AI extracts</span><span>${icon('fingerprint')}Code matches & calculates</span><span>${icon('shield-check')}You approve</span><span class="illustrative-note">Illustrative previews · Click to explore</span></div></section>`;
 }
 export function enhance(navigate, themeChanged) {
   observer?.disconnect();
@@ -28,17 +31,17 @@ export function enhance(navigate, themeChanged) {
   const header=document.querySelector('.header-right');
   if(header){
     const controls=document.createElement('div');controls.className='appearance-controls';
-    controls.innerHTML='<button id="theme-toggle" class="theme-toggle" aria-label="Toggle dark mode">◐ <span>Appearance</span></button><button id="motion-toggle" class="theme-toggle" aria-label="Pause decorative motion">Ⅱ</button>';
+    controls.innerHTML=`<button id="theme-toggle" class="theme-toggle" aria-label="Toggle dark mode">${icon('moon')}</button><button id="motion-toggle" class="theme-toggle" aria-label="Pause decorative motion">${icon('pause')}</button>`;
     header.prepend(controls);
     const toggle=controls.querySelector('#theme-toggle');
     toggle.setAttribute('aria-pressed',String(document.documentElement.dataset.theme==='dark'));
     toggle.onclick=()=>{const next=document.documentElement.dataset.theme==='dark'?'light':'dark';document.documentElement.dataset.theme=next;try{localStorage.setItem('recallrelay-theme',next);}catch{}toggle.setAttribute('aria-pressed',String(next==='dark'));themeChanged();};
     const motion=controls.querySelector('#motion-toggle');
-    const syncMotion=()=>{const paused=document.documentElement.classList.contains('motion-paused');motion.setAttribute('aria-pressed',String(paused));motion.setAttribute('aria-label',paused?'Resume decorative motion':'Pause decorative motion');motion.textContent=paused?'▷':'Ⅱ';};
+    const syncMotion=()=>{const paused=document.documentElement.classList.contains('motion-paused');motion.setAttribute('aria-pressed',String(paused));motion.setAttribute('aria-label',paused?'Resume decorative motion':'Pause decorative motion');motion.innerHTML=icon(paused?'play':'pause');};
     motion.onclick=()=>{document.documentElement.classList.toggle('motion-paused');syncMotion();};syncMotion();
   }
   document.querySelectorAll('[data-workflow]').forEach(b=>b.onclick=()=>{navigate(b.dataset.workflow);const h=document.querySelector('h1');h?.setAttribute('tabindex','-1');h?.focus({preventScroll:true});window.scrollTo({top:0,behavior:'instant'});});
-  document.querySelectorAll('[data-nav]').forEach(b=>{b.setAttribute('aria-label',b.textContent.trim());if(b.classList.contains('active'))b.setAttribute('aria-current','page');});
+  document.querySelectorAll('[data-nav]').forEach(b=>{const label=b.querySelector('span')?.textContent||b.textContent.trim();b.setAttribute('aria-label',label);b.title=label;if(b.classList.contains('active'))b.setAttribute('aria-current','page');});
   const track=document.querySelector('.flow-track');
   if(track){
     // Measure only on resize; the SVG remains decorative and never intercepts controls.
@@ -65,7 +68,7 @@ export function enhance(navigate, themeChanged) {
 let frame=0, pending;
 document.addEventListener('pointermove',e=>{
   if(reduced.matches || document.documentElement.classList.contains('motion-paused') || e.pointerType==='touch')return;
-  const card=e.target.closest('.flow-card,.stats article,.page-title');if(!card)return;
+  const card=e.target.closest('.spotlight-card');if(!card)return;
   pending={card,x:e.clientX,y:e.clientY};if(frame)return;
   frame=requestAnimationFrame(()=>{frame=0;const {card,x,y}=pending;if(!card.isConnected)return;const r=card.getBoundingClientRect();card.style.setProperty('--pointer-x',`${x-r.left}px`);card.style.setProperty('--pointer-y',`${y-r.top}px`);});
 },{passive:true});
@@ -75,9 +78,12 @@ document.addEventListener('click',e=>{
 });
 export function notify(message,error=false){
   const stack=document.querySelector('#toast');stack.className='toast-stack';
+  // Put status feedback above native modal dialogs without moving focus.
+  stack.setAttribute('popover','manual');if(stack.showPopover&&!stack.matches(':popover-open'))stack.showPopover();
   const item=document.createElement('div');item.className='toast-item'+(error?' error':'');
   const text=document.createElement('span');text.textContent=message;
-  const close=document.createElement('button');close.textContent='×';close.setAttribute('aria-label','Dismiss notification');close.onclick=()=>item.remove();item.append(text,close);stack.append(item);
+  const mark=document.createElement('span');mark.className='toast-icon';mark.innerHTML=icon(error?'triangle-alert':'circle-check');
+  const close=document.createElement('button');close.innerHTML=icon('x');close.setAttribute('aria-label','Dismiss notification');close.onclick=()=>item.remove();item.append(mark,text,close);stack.append(item);
   while(stack.children.length>3)stack.firstElementChild.remove();
   let timer=setTimeout(()=>item.remove(),9000);item.onpointerenter=item.onfocusin=()=>clearTimeout(timer);item.onpointerleave=item.onfocusout=()=>{clearTimeout(timer);timer=setTimeout(()=>item.remove(),9000);};
 }
