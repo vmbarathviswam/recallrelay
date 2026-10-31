@@ -11,7 +11,7 @@ const statuses = {review:'Verify evidence',approval:'Ready for approval',clarifi
 let state, grid, active = 'dashboard', selected, filter = 'all', query = '', adminToken = '', busy = false;
 const app = $('#app'), dialog = $('#review');
 let reviewOpener;
-dialog.addEventListener('close',()=>{selected=null;(reviewOpener?.isConnected?reviewOpener:document.querySelector('[data-nav=cases]'))?.focus();});
+dialog.addEventListener('close',()=>{selected=null;const notices=$('#toast');if(dialog.contains(notices))document.body.append(notices);(reviewOpener?.isConnected?reviewOpener:document.querySelector('[data-nav=cases]'))?.focus();});
 function toast(message,error=false) { notify(message,error); }
 const request = document.documentElement.dataset.runtime === 'browser' ? (await import('./browser-replay.js')).browserRequest : fetch;
 async function api(path,body) {
@@ -87,6 +87,7 @@ function showCase(id){
   const c=state.claims.find(x=>x.id===id);if(!c)return;selected=id;
   const e=c.evidence,o=c.order,item=o.items.find(x=>x.sku===c.sku),op=c.operation;
   const refunded=(item.priorRefundCents||0)+state.operations.filter(x=>x.claimId===id&&['COMPLETED','PENDING'].includes(x.status)).reduce((n,x)=>n+x.amountCents,0);
+  const notices=$('#toast');if(dialog.contains(notices))document.body.append(notices);
   dialog.innerHTML=caseView(c,state,refunded);
   $('#close-review').onclick=()=>{selected=null;dialog.close();};
   $('#verify-evidence').onclick=()=>{const confirmed=$('#verify-confirm').checked;act(()=>api('/api/claims/'+id+'/verify',{confirmed,revision:c.evidenceRevision}),'Evidence verified by the merchant.');};

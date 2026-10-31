@@ -78,12 +78,16 @@ document.addEventListener('click',e=>{
 });
 export function notify(message,error=false){
   const stack=document.querySelector('#toast');stack.className='toast-stack';
-  // Put status feedback above native modal dialogs without moving focus.
+  const opener=document.activeElement;
+  // Keep feedback inside the active modal's accessibility tree, then lift it
+  // into the top layer so it is not clipped by that modal's scroll container.
+  const host=[...document.querySelectorAll('dialog[open]')].at(-1)||document.body;
+  if(stack.parentElement!==host)host.append(stack);
   stack.setAttribute('popover','manual');if(stack.showPopover&&!stack.matches(':popover-open'))stack.showPopover();
   const item=document.createElement('div');item.className='toast-item'+(error?' error':'');
   const text=document.createElement('span');text.textContent=message;
   const mark=document.createElement('span');mark.className='toast-icon';mark.innerHTML=icon(error?'triangle-alert':'circle-check');
-  const close=document.createElement('button');close.innerHTML=icon('x');close.setAttribute('aria-label','Dismiss notification');close.onclick=()=>item.remove();item.append(mark,text,close);stack.append(item);
+  const close=document.createElement('button');close.innerHTML=icon('x');close.setAttribute('aria-label','Dismiss notification');close.onclick=()=>{item.remove();if(opener?.isConnected&&!opener.disabled)opener.focus({preventScroll:true});};item.append(mark,text,close);stack.append(item);
   while(stack.children.length>3)stack.firstElementChild.remove();
   let timer=setTimeout(()=>item.remove(),9000);item.onpointerenter=item.onfocusin=()=>clearTimeout(timer);item.onpointerleave=item.onfocusout=()=>{clearTimeout(timer);timer=setTimeout(()=>item.remove(),9000);};
 }
